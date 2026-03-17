@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Gym Plan">
+<meta name="theme-color" content="#0f0f0f">
+<title>Gym Plan — Ronald & Sunay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f0f0f;
+  --bg2: #1a1a1a;
+  --bg3: #242424;
+  --border: rgba(255,255,255,0.08);
+  --accent: #e8f545;
+  --accent2: #b5c230;
+  --text: #f0f0f0;
+  --muted: #888;
+  --muted2: #555;
+  --red: #ff4d4d;
+  --safe: env(safe-area-inset-bottom, 0px);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; overflow: hidden; }
+
+/* SPLASH */
+#splash {
+  position: fixed; inset: 0; background: var(--bg);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
+  z-index: 100; transition: opacity .4s; pointer-events: none;
+}
+#splash.gone { opacity: 0; }
+#splash .logo { font-family: 'Barlow Condensed', sans-serif; font-size: 52px; font-weight: 800; letter-spacing: -1px; color: var(--accent); line-height: 1; }
+#splash .sub { font-size: 13px; color: var(--muted); letter-spacing: .15em; text-transform: uppercase; }
+
+/* LAYOUT */
+#app { height: 100%; display: flex; flex-direction: column; }
+
+/* HEADER */
+header {
+  padding: 16px 20px 12px;
+  padding-top: calc(16px + env(safe-area-inset-top, 0px));
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.app-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: .5px; color: var(--accent); }
+.week-toggle { display: flex; background: var(--bg3); border-radius: 8px; padding: 3px; gap: 3px; }
+.week-btn {
+  padding: 5px 14px; border-radius: 6px; border: none; background: none;
+  color: var(--muted); font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px; font-weight: 700; letter-spacing: .05em; cursor: pointer; transition: all .15s;
+}
+.week-btn.active { background: var(--accent); color: #0f0f0f; }
+
+/* DAY TABS */
+.day-tabs { display: flex; gap: 6px; }
+.day-tab {
+  flex: 1; padding: 8px 4px; border-radius: 8px; border: 1px solid var(--border);
+  background: none; color: var(--muted); font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px; font-weight: 700; letter-spacing: .05em; cursor: pointer; transition: all .15s;
+  text-align: center;
+}
+.day-tab .day-label { display: block; font-size: 11px; font-family: 'Barlow', sans-serif; font-weight: 400; color: var(--muted2); margin-top: 1px; }
+.day-tab.active { background: var(--bg3); border-color: var(--accent); color: var(--accent); }
+.day-tab.active .day-label { color: var(--accent2); }
+
+/* SCROLL AREA */
+#content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 0 0 calc(80px + var(--safe)); }
+
+/* SECTION */
+.section { padding: 14px 20px; border-bottom: 1px solid var(--border); }
+.section-label {
+  font-size: 9px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--muted2); margin-bottom: 10px;
+}
+
+/* CALOR */
+.calor-items { display: flex; flex-direction: column; gap: 4px; }
+.calor-item { font-size: 14px; color: var(--muted); padding: 4px 0; }
+
+/* ZONA MEDIA */
+.zm-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 8px; }
+.zm-timing { font-size: 11px; color: var(--accent2); font-weight: 500; }
+.zm-items { display: flex; flex-direction: column; gap: 4px; }
+.zm-item { font-size: 14px; color: var(--text); padding: 4px 0; display: flex; align-items: center; gap: 8px; }
+.zm-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+/* EXERCISES */
+.ex-list { display: flex; flex-direction: column; gap: 2px; }
+.ex-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 10px; background: var(--bg2);
+  border: 1px solid transparent; transition: all .15s; cursor: pointer;
+  position: relative;
+}
+.ex-item.done { background: var(--bg3); border-color: var(--accent); }
+.ex-item.done .ex-name { color: var(--muted); text-decoration: line-through; }
+.ex-num {
+  font-family: 'Barlow Condensed', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--muted2); min-width: 18px; flex-shrink: 0;
+}
+.ex-item.done .ex-num { color: var(--accent); }
+.ex-body { flex: 1; min-width: 0; }
+.ex-name { font-size: 14px; color: var(--text); line-height: 1.3; transition: color .15s; }
+.ex-detail {
+  font-size: 12px; color: var(--muted); margin-top: 2px;
+  font-family: 'Barlow Condensed', sans-serif; letter-spacing: .04em;
+}
+.ex-check {
+  width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid var(--muted2);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.ex-item.done .ex-check { background: var(--accent); border-color: var(--accent); }
+.check-svg { width: 12px; height: 12px; opacity: 0; transition: opacity .15s; }
+.ex-item.done .check-svg { opacity: 1; }
+
+/* PROGRESS BAR */
+#progress-bar-wrap {
+  position: fixed; bottom: calc(56px + var(--safe)); left: 0; right: 0;
+  padding: 8px 20px; background: var(--bg); border-top: 1px solid var(--border);
+  z-index: 10;
+}
+.progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.progress-label span:last-child { color: var(--accent); font-weight: 500; }
+.progress-track { height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width .3s; }
+
+/* RESET BTN */
+#reset-btn {
+  position: fixed; bottom: calc(100px + var(--safe)); right: 20px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 20px;
+  color: var(--muted); font-size: 12px; padding: 6px 12px; cursor: pointer;
+  font-family: 'Barlow', sans-serif; z-index: 10; transition: all .15s;
+}
+#reset-btn:active { background: var(--bg3); color: var(--red); border-color: var(--red); }
+
+/* NAV */
+nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  padding-bottom: var(--safe);
+  height: calc(56px + var(--safe));
+  background: var(--bg); border-top: 1px solid var(--border);
+  display: flex; align-items: flex-start; justify-content: center; padding-top: 8px;
+  z-index: 20;
+}
+.nav-hint { font-size: 11px; color: var(--muted2); letter-spacing: .08em; }
+
+/* TIMER OVERLAY */
+#timer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.92); z-index: 50;
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+#timer-overlay.show { display: flex; }
+.timer-label { font-size: 13px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.timer-circle {
+  width: 180px; height: 180px; border-radius: 50%;
+  border: 3px solid var(--bg3); position: relative; display: flex; align-items: center; justify-content: center;
+}
+.timer-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+.timer-track { fill: none; stroke: var(--bg3); stroke-width: 3; }
+.timer-prog { fill: none; stroke: var(--accent); stroke-width: 3; stroke-linecap: round; transition: stroke-dashoffset .9s linear; }
+.timer-num { font-family: 'Barlow Condensed', sans-serif; font-size: 64px; font-weight: 800; color: var(--accent); line-height: 1; }
+.timer-close {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 24px;
+  color: var(--muted); font-size: 14px; padding: 10px 28px; cursor: pointer;
+  font-family: 'Barlow', sans-serif; transition: all .15s;
+}
+.timer-close:active { background: var(--bg3); }
+
+/* COMPLETE */
+#complete-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.95); z-index: 60;
+  display: none; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+}
+#complete-overlay.show { display: flex; }
+.complete-icon { font-size: 64px; animation: pop .4s cubic-bezier(.175,.885,.32,1.275); }
+@keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+.complete-title { font-family: 'Barlow Condensed', sans-serif; font-size: 42px; font-weight: 800; color: var(--accent); }
+.complete-sub { font-size: 15px; color: var(--muted); }
+.complete-btn {
+  margin-top: 8px; background: var(--accent); color: #0f0f0f;
+  border: none; border-radius: 24px; font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px; font-weight: 700; padding: 12px 32px; cursor: pointer; letter-spacing: .05em;
+}
+
+/* PAUSA CHIP */
+.pausa-chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--bg3); border-radius: 6px; padding: 3px 8px;
+  font-size: 11px; color: var(--muted); cursor: pointer; border: 1px solid var(--border);
+  transition: all .15s; margin-top: 6px;
+}
+.pausa-chip:active { border-color: var(--accent); color: var(--accent); }
+.pausa-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); }
+
+/* INSTALL HINT */
+#install-hint {
+  margin: 12px 20px 0;
+  background: var(--bg3); border: 1px solid var(--border); border-radius: 10px;
+  padding: 10px 14px; display: flex; align-items: flex-start; gap: 10px;
+}
+#install-hint .hint-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+#install-hint .hint-text { font-size: 12px; color: var(--muted); line-height: 1.5; }
+#install-hint .hint-text strong { color: var(--text); }
+#install-hint-close { background: none; border: none; color: var(--muted2); font-size: 16px; cursor: pointer; flex-shrink: 0; align-self: center; }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="logo">GYM</div>
+  <div class="sub">Ronald &amp; Sunay</div>
+</div>
+
+<div id="app">
+  <header>
+    <div class="header-top">
+      <div class="app-title">GYM PLAN</div>
+      <div class="week-toggle">
+        <button class="week-btn active" onclick="setWeek('A',this)">SEM A</button>
+        <button class="week-btn" onclick="setWeek('B',this)">SEM B</button>
+      </div>
+    </div>
+    <div class="day-tabs">
+      <button class="day-tab active" onclick="setDay(0,this)">
+        LUN<span class="day-label">Piernas+Pecho</span>
+      </button>
+      <button class="day-tab" onclick="setDay(1,this)">
+        MIÉ<span class="day-label">Espalda+Hombros</span>
+      </button>
+      <button class="day-tab" onclick="setDay(2,this)">
+        VIE<span class="day-label">Isquios+Brazos</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="install-hint">
+    <div class="hint-icon">📲</div>
+    <div class="hint-text" id="hint-text"></div>
+    <button id="install-hint-close" onclick="dismissHint()">✕</button>
+  </div>
+
+  <div id="content"></div>
+</div>
+
+<div id="progress-bar-wrap">
+  <div class="progress-label">
+    <span id="prog-label">Progreso del día</span>
+    <span id="prog-pct">0%</span>
+  </div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+</div>
+
+<button id="reset-btn" onclick="resetDay()">↺ Reiniciar</button>
+
+<nav><span class="nav-hint">Tocá un ejercicio para marcarlo · Tocá la pausa para el timer</span></nav>
+
+<div id="timer-overlay">
+  <div class="timer-label" id="timer-label">Pausa entre series</div>
+  <div class="timer-circle">
+    <svg class="timer-svg" viewBox="0 0 180 180">
+      <circle class="timer-track" cx="90" cy="90" r="86"/>
+      <circle class="timer-prog" id="timer-prog" cx="90" cy="90" r="86"
+        stroke-dasharray="540" stroke-dashoffset="0"/>
+    </svg>
+    <div class="timer-num" id="timer-num">90</div>
+  </div>
+  <button class="timer-close" onclick="closeTimer()">Cerrar</button>
+</div>
+
+<div id="complete-overlay">
+  <div class="complete-icon">💪</div>
+  <div class="complete-title">¡LISTO!</div>
+  <div class="complete-sub">Sesión completada</div>
+  <button class="complete-btn" onclick="closeComplete()">Cerrar</button>
+</div>
+
+<script>
+const DATA = {
+  A: [
+    {
+      day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Single V-ups', 'Russian twist'] },
+      ex: [
+        { name: 'Sentadilla c/barra', detail: '4 series × 10 reps' },
+        { name: 'Prensa 45°', detail: '4 series × 10 reps' },
+        { name: 'Estocadas alternadas c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Press de banca plano c/barra', detail: '4 series × 10 reps' },
+        { name: 'Press de pecho en máquina', detail: '3 series × 10 reps' },
+        { name: 'Press de banca inclinado c/barra', detail: '3 series × 10 reps' },
+      ]
+    },
+    {
+      day: 'Miércoles', focus: 'Espalda + Hombros',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 40" act / 20" pausa', items: ['Side plank', 'Plank leg raise'] },
+      ex: [
+        { name: 'Jalón al pecho prono', detail: '4 series × 10 reps' },
+        { name: 'Remo en polea baja', detail: '4 series × 10 reps' },
+        { name: 'Remo unilateral c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Press de hombros c/mancuerna', detail: '4 series × 10 reps' },
+        { name: 'Vuelos laterales c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Peso muerto c/barra', detail: '4 series × 10 reps' },
+      ]
+    },
+    {
+      day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+      ex: [
+        { name: 'Camilla de isquios', detail: '4 series × 10 reps' },
+        { name: 'Elevación de cadera en máquina', detail: '4 series × 10 reps' },
+        { name: 'Peso muerto unilateral c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Curl de bíceps c/barra', detail: '4 series × 10 reps' },
+        { name: 'Press copa c/mancuerna (tríceps)', detail: '4 series × 10 reps' },
+        { name: 'Pantorrillas en máquina', detail: '3 series × 15 reps' },
+      ]
+    }
+  ],
+  B: [
+    {
+      day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Climbers'] },
+      ex: [
+        { name: 'Sentadilla búlgara c/mancuerna', detail: '4 series × 10 reps' },
+        { name: 'Sentadilla sumo en multipower', detail: '3 series × 10 reps' },
+        { name: 'Sillón de cuádriceps', detail: '4 series × 12 reps' },
+        { name: 'Cuádriceps en prensa 45°', detail: '3 series × 10 reps' },
+        { name: 'Apertura c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Abducción de cadera en polea', detail: '3 series × 10 reps' },
+      ]
+    },
+    {
+      day: 'Miércoles', focus: 'Espalda + Hombros',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 20" act / 20" pausa', items: ['V-ups', 'Side plank', 'Crab toe touch', 'Commando plank'] },
+      ex: [
+        { name: 'Jalón supino', detail: '4 series × 10 reps' },
+        { name: 'Remo abierto en polea baja', detail: '3 series × 10 reps' },
+        { name: 'Pull-over en polea', detail: '3 series × 10 reps' },
+        { name: 'Press de hombros en máquina', detail: '4 series × 10 reps' },
+        { name: 'Vuelos posteriores c/mancuerna', detail: '3 series × 10 reps' },
+        { name: 'Vuelos frontales c/mancuerna', detail: '3 series × 10 reps' },
+      ]
+    },
+    {
+      day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+      calor: ['Movilidad articular general'],
+      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+      ex: [
+        { name: 'Curl femoral en polea', detail: '4 series × 10 reps' },
+        { name: 'Patada de glúteo en polea', detail: '3 series × 10 reps' },
+        { name: 'Curl femoral en fitball', detail: '3 series × 15 reps' },
+        { name: 'Empuje de cadera en máquina', detail: '4 series × 15 reps' },
+        { name: 'Curl de bíceps martillo c/mancuerna', detail: '4 series × 10 reps' },
+        { name: 'Extensión de tríceps en polea', detail: '4 series × 10 reps' },
+        { name: 'Pantorrillas en prensa 45°', detail: '3 series × 15 reps' },
+      ]
+    }
+  ]
+};
+
+let week = 'A', dayIdx = 0;
+let done = {};
+let timerInterval = null, timerTotal = 90, timerLeft = 90;
+
+function key() { return `${week}-${dayIdx}`; }
+
+function setWeek(w, btn) {
+  week = w;
+  document.querySelectorAll('.week-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+function setDay(i, btn) {
+  dayIdx = i;
+  document.querySelectorAll('.day-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  render();
+}
+
+function toggleEx(idx) {
+  const k = key();
+  if (!done[k]) done[k] = {};
+  done[k][idx] = !done[k][idx];
+  saveState();
+  render();
+  const d = DATA[week][dayIdx];
+  const total = d.ex.length;
+  const count = Object.values(done[k]||{}).filter(Boolean).length;
+  if (count === total) {
+    setTimeout(() => document.getElementById('complete-overlay').classList.add('show'), 300);
+  }
+}
+
+function resetDay() {
+  const k = key();
+  done[k] = {};
+  saveState();
+  render();
+}
+
+function render() {
+  const d = DATA[week][dayIdx];
+  const k = key();
+  const doneMap = done[k] || {};
+  const total = d.ex.length;
+  const count = Object.values(doneMap).filter(Boolean).length;
+  const pct = total > 0 ? Math.round(count/total*100) : 0;
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = `${count} / ${total} ejercicios`;
+
+  let html = '';
+
+  // Calor
+  html += `<div class="section">
+    <div class="section-label">Entrada en calor — 5 min</div>
+    <div class="calor-items">`;
+  d.calor.forEach(c => { html += `<div class="calor-item">· ${c}</div>`; });
+  html += `</div></div>`;
+
+  // Zona media
+  html += `<div class="section">
+    <div class="zm-header">
+      <div class="section-label" style="margin-bottom:0">Zona media</div>
+      <div class="zm-timing">${d.zm.timing}</div>
+    </div>
+    <div class="zm-items">`;
+  d.zm.items.forEach(z => { html += `<div class="zm-item"><div class="zm-dot"></div>${z}</div>`; });
+  html += `</div></div>`;
+
+  // Pausa chip
+  html += `<div class="section" style="border-bottom:none;padding-bottom:6px;">
+    <div class="section-label">Bloque principal</div>
+    <div style="margin-bottom:10px;">
+      <div class="pausa-chip" onclick="startTimer(90)">
+        <div class="pausa-dot"></div>
+        <span>Timer pausa: 90 seg</span>
+      </div>
+    </div>
+    <div class="ex-list">`;
+
+  d.ex.forEach((ex, i) => {
+    const isDone = !!doneMap[i];
+    html += `<div class="ex-item${isDone ? ' done' : ''}" onclick="toggleEx(${i})">
+      <div class="ex-num">${i+1}</div>
+      <div class="ex-body">
+        <div class="ex-name">${ex.name}</div>
+        <div class="ex-detail">${ex.detail}</div>
+      </div>
+      <div class="ex-check">
+        <svg class="check-svg" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6l3 3 5-5" stroke="#0f0f0f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>`;
+  });
+
+  html += `</div></div>`;
+  document.getElementById('content').innerHTML = html;
+}
+
+// TIMER
+function startTimer(secs) {
+  if (timerInterval) clearInterval(timerInterval);
+  timerTotal = secs;
+  timerLeft = secs;
+  const overlay = document.getElementById('timer-overlay');
+  overlay.classList.add('show');
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timerLeft--;
+    updateTimerDisplay();
+    if (timerLeft <= 0) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      // vibrate
+      if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      setTimeout(() => overlay.classList.remove('show'), 600);
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  document.getElementById('timer-num').textContent = timerLeft;
+  const circ = 2 * Math.PI * 86;
+  const offset = circ * (timerLeft / timerTotal);
+  document.getElementById('timer-prog').style.strokeDasharray = circ;
+  document.getElementById('timer-prog').style.strokeDashoffset = circ - offset;
+}
+
+function closeTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+  document.getElementById('timer-overlay').classList.remove('show');
+}
+
+function closeComplete() {
+  document.getElementById('complete-overlay').classList.remove('show');
+}
+
+// PERSIST
+function saveState() {
+  try { localStorage.setItem('gymDone', JSON.stringify(done)); } catch(e){}
+}
+function loadState() {
+  try { const s = localStorage.getItem('gymDone'); if(s) done = JSON.parse(s); } catch(e){}
+}
+
+// INSTALL HINT
+function showInstallHint() {
+  const el = document.getElementById('install-hint');
+  const txt = document.getElementById('hint-text');
+  const ua = navigator.userAgent;
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  const isAndroid = /Android/.test(ua);
+  if (isIOS) {
+    txt.innerHTML = '<strong>Guardar en pantalla de inicio (iPhone):</strong> Tocá el botón compartir <strong>⎋</strong> en Safari → "Agregar a pantalla de inicio"';
+  } else if (isAndroid) {
+    txt.innerHTML = '<strong>Guardar en pantalla de inicio (Android):</strong> Menú del navegador <strong>⋮</strong> → "Agregar a pantalla de inicio" o "Instalar app"';
+  } else {
+    el.style.display = 'none';
+    return;
+  }
+  el.style.display = 'flex';
+}
+function dismissHint() {
+  document.getElementById('install-hint').style.display = 'none';
+  try { localStorage.setItem('hintDismissed', '1'); } catch(e){}
+}
+
+// INIT
+loadState();
+render();
+setTimeout(() => {
+  document.getElementById('splash').classList.add('gone');
+  setTimeout(() => document.getElementById('splash').style.display = 'none', 400);
+}, 900);
+try {
+  if (!localStorage.getItem('hintDismissed')) showInstallHint();
+  else document.getElementById('install-hint').style.display = 'none';
+} catch(e) { showInstallHint(); }
+</script>
+</body>
+</html>
