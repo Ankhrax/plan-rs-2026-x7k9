@@ -287,90 +287,95 @@ nav {
 <script>
 const DATA = {
   A: [
-    {
-      day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Single V-ups', 'Russian twist'] },
-      ex: [
-        { name: 'Sentadilla c/barra', detail: '4 series × 10 reps' },
-        { name: 'Prensa 45°', detail: '4 series × 10 reps' },
-        { name: 'Estocadas alternadas c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Press de banca plano c/barra', detail: '4 series × 10 reps' },
-        { name: 'Press de pecho en máquina', detail: '3 series × 10 reps' },
-        { name: 'Press de banca inclinado c/barra', detail: '3 series × 10 reps' },
-      ]
-    },
-    {
-      day: 'Miércoles', focus: 'Espalda + Hombros',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 40" act / 20" pausa', items: ['Side plank', 'Plank leg raise'] },
-      ex: [
-        { name: 'Jalón al pecho prono', detail: '4 series × 10 reps' },
-        { name: 'Remo en polea baja', detail: '4 series × 10 reps' },
-        { name: 'Remo unilateral c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Press de hombros c/mancuerna', detail: '4 series × 10 reps' },
-        { name: 'Vuelos laterales c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Peso muerto c/barra', detail: '4 series × 10 reps' },
-      ]
-    },
-    {
-      day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
-      ex: [
-        { name: 'Camilla de isquios', detail: '4 series × 10 reps' },
-        { name: 'Elevación de cadera en máquina', detail: '4 series × 10 reps' },
-        { name: 'Peso muerto unilateral c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Curl de bíceps c/barra', detail: '4 series × 10 reps' },
-        { name: 'Press copa c/mancuerna (tríceps)', detail: '4 series × 10 reps' },
-        { name: 'Pantorrillas en máquina', detail: '3 series × 15 reps' },
-      ]
-    }
-  ],
-  B: [
-    {
-      day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Climbers'] },
-      ex: [
-        { name: 'Sentadilla búlgara c/mancuerna', detail: '4 series × 10 reps' },
-        { name: 'Sentadilla sumo en multipower', detail: '3 series × 10 reps' },
-        { name: 'Sillón de cuádriceps', detail: '4 series × 12 reps' },
-        { name: 'Cuádriceps en prensa 45°', detail: '3 series × 10 reps' },
-        { name: 'Apertura c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Abducción de cadera en polea', detail: '3 series × 10 reps' },
-      ]
-    },
-    {
-      day: 'Miércoles', focus: 'Espalda + Hombros',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 20" act / 20" pausa', items: ['V-ups', 'Side plank', 'Crab toe touch', 'Commando plank'] },
-      ex: [
-        { name: 'Jalón supino', detail: '4 series × 10 reps' },
-        { name: 'Remo abierto en polea baja', detail: '3 series × 10 reps' },
-        { name: 'Pull-over en polea', detail: '3 series × 10 reps' },
-        { name: 'Press de hombros en máquina', detail: '4 series × 10 reps' },
-        { name: 'Vuelos posteriores c/mancuerna', detail: '3 series × 10 reps' },
-        { name: 'Vuelos frontales c/mancuerna', detail: '3 series × 10 reps' },
-      ]
-    },
-    {
-      day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
-      calor: ['Movilidad articular general'],
-      zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
-      ex: [
-        { name: 'Curl femoral en polea', detail: '4 series × 10 reps' },
-        { name: 'Patada de glúteo en polea', detail: '3 series × 10 reps' },
-        { name: 'Curl femoral en fitball', detail: '3 series × 15 reps' },
-        { name: 'Empuje de cadera en máquina', detail: '4 series × 15 reps' },
-        { name: 'Curl de bíceps martillo c/mancuerna', detail: '4 series × 10 reps' },
-        { name: 'Extensión de tríceps en polea', detail: '4 series × 10 reps' },
-        { name: 'Pantorrillas en prensa 45°', detail: '3 series × 15 reps' },
-      ]
-    }
-  ]
-};
+  {
+    day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Single V-ups', 'Russian twist'] },
+    ex: [
+      { name: 'Sentadilla c/barra', detail: '4 series × 8–10 reps' },
+      { name: 'Prensa 45°', detail: '3 series × 10–12 reps' },
+      { name: 'Estocadas alternadas c/mancuerna', detail: '3 series × 10 reps' },
 
+      { name: 'Press de banca plano c/barra', detail: '4 series × 8–10 reps' },
+      { name: 'Press inclinado c/barra', detail: '3 series × 10 reps' },
+      { name: 'Press de pecho en máquina', detail: '3 series × 10–12 reps' },
+    ]
+  },
+  {
+    day: 'Miércoles', focus: 'Espalda + Hombros',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 40" act / 20" pausa', items: ['Side plank', 'Plank leg raise'] },
+    ex: [
+      { name: 'Jalón al pecho prono', detail: '4 series × 8–10 reps' },
+      { name: 'Remo en polea baja', detail: '3 series × 10–12 reps' },
+      { name: 'Remo unilateral c/mancuerna', detail: '3 series × 10 reps' },
+
+      { name: 'Press de hombros c/mancuerna', detail: '3 series × 8–10 reps' },
+      { name: 'Vuelos laterales c/mancuerna', detail: '3 series × 12–15 reps' },
+
+      { name: 'Plancha', detail: '3 series × 30–40 seg' },
+    ]
+  },
+  {
+    day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+    ex: [
+      { name: 'Peso muerto c/barra', detail: '4 series × 8–10 reps' },
+      { name: 'Elevación de cadera en máquina', detail: '3 series × 10–12 reps' },
+      { name: 'Camilla de isquios', detail: '3 series × 12–15 reps' },
+
+      { name: 'Curl de bíceps c/barra', detail: '3 series × 10–12 reps' },
+      { name: 'Curl martillo c/mancuerna', detail: '3 series × 10–12 reps' },
+      { name: 'Press copa c/mancuerna (tríceps)', detail: '3 series × 10–12 reps' },
+    ]
+  }
+],
+
+B: [
+  {
+    day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Climbers'] },
+    ex: [
+      { name: 'Sentadilla búlgara c/mancuerna', detail: '3 series × 10 reps' },
+      { name: 'Sentadilla sumo en multipower', detail: '3 series × 10–12 reps' },
+      { name: 'Sillón de cuádriceps', detail: '3 series × 12 reps' },
+
+      { name: 'Press de pecho en máquina', detail: '4 series × 8–10 reps' },
+      { name: 'Apertura c/mancuerna', detail: '3 series × 12–15 reps' },
+
+      { name: 'Aducción en máquina', detail: '3 series × 12–15 reps' },
+    ]
+  },
+  {
+    day: 'Miércoles', focus: 'Espalda + Hombros',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Side plank'] },
+    ex: [
+      { name: 'Jalón supino', detail: '4 series × 8–10 reps' },
+      { name: 'Remo abierto en polea baja', detail: '3 series × 10–12 reps' },
+      { name: 'Pull-over en polea', detail: '3 series × 10–12 reps' },
+
+      { name: 'Press de hombros en máquina', detail: '3 series × 8–10 reps' },
+      { name: 'Vuelos posteriores c/mancuerna', detail: '3 series × 12–15 reps' },
+    ]
+  },
+  {
+    day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+    calor: ['Movilidad articular general'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+    ex: [
+      { name: 'Elevación de cadera en máquina', detail: '4 series × 10–12 reps' },
+      { name: 'Curl femoral', detail: '3 series × 12–15 reps' },
+      { name: 'Abducción en máquina', detail: '3 series × 12–15 reps' },
+
+      { name: 'Curl de bíceps martillo c/mancuerna', detail: '3 series × 10–12 reps' },
+      { name: 'Curl de bíceps c/mancuerna', detail: '3 series × 10–12 reps' },
+      { name: 'Extensión de tríceps en polea', detail: '3 series × 10–12 reps' },
+    ]
+  }
+]
 let week = 'A', dayIdx = 0;
 let done = {};
 let timerInterval = null, timerTotal = 90, timerLeft = 90;
