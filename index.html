@@ -50,15 +50,25 @@ header {
   border-bottom: 1px solid var(--border);
   flex-shrink: 0;
 }
-.header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.header-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; }
 .app-title { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: .5px; color: var(--accent); }
+.plan-controls { display: flex; align-items: center; gap: 8px; }
+.person-toggle,
 .week-toggle { display: flex; background: var(--bg3); border-radius: 8px; padding: 3px; gap: 3px; }
+.person-btn,
 .week-btn {
   padding: 5px 14px; border-radius: 6px; border: none; background: none;
   color: var(--muted); font-family: 'Barlow Condensed', sans-serif;
   font-size: 14px; font-weight: 700; letter-spacing: .05em; cursor: pointer; transition: all .15s;
 }
+.person-btn.active,
 .week-btn.active { background: var(--accent); color: #0f0f0f; }
+@media (max-width: 420px) {
+  .header-top { align-items: flex-start; flex-direction: column; }
+  .plan-controls { width: 100%; }
+  .person-toggle, .week-toggle { flex: 1; }
+  .person-btn, .week-btn { flex: 1; padding-left: 8px; padding-right: 8px; }
+}
 
 /* DAY TABS */
 .day-tabs { display: flex; gap: 6px; }
@@ -225,9 +235,15 @@ nav {
   <header>
     <div class="header-top">
       <div class="app-title">GYM PLAN</div>
-      <div class="week-toggle">
-        <button class="week-btn active" onclick="setWeek('A',this)">SEM A</button>
-        <button class="week-btn" onclick="setWeek('B',this)">SEM B</button>
+      <div class="plan-controls">
+        <div class="person-toggle">
+          <button class="person-btn active" onclick="setPerson('ronald',this)">RON</button>
+          <button class="person-btn" onclick="setPerson('reina',this)">REINA</button>
+        </div>
+        <div class="week-toggle">
+          <button class="week-btn active" onclick="setWeek('A',this)">SEM A</button>
+          <button class="week-btn" onclick="setWeek('B',this)">SEM B</button>
+        </div>
       </div>
     </div>
     <div class="day-tabs">
@@ -262,7 +278,7 @@ nav {
 
 <button id="reset-btn" onclick="resetDay()">↺ Reiniciar</button>
 
-<nav><span class="nav-hint">Tocá un ejercicio para marcarlo · Tocá la pausa para el timer</span></nav>
+<nav><span class="nav-hint">Plan de casa · Tocá un ejercicio para marcarlo · Tocá la pausa para el timer</span></nav>
 
 <div id="timer-overlay">
   <div class="timer-label" id="timer-label">Pausa entre series</div>
@@ -286,48 +302,50 @@ nav {
 
 <script>
 const DATA = {
+ronald: {
+  label: 'Ronald',
   A: [
   {
     day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', '2 rondas suaves: sentadilla libre + flexiones inclinadas'],
     zm: { timing: '3 series · 30" act / 15" pausa', items: ['Single V-ups', 'Russian twist'] },
     ex: [
-      { name: 'Sentadilla c/barra', detail: '4 series × 8–10 reps' },
-      { name: 'Prensa 45°', detail: '3 series × 10–12 reps' },
-      { name: 'Estocadas alternadas c/mancuerna', detail: '3 series × 10 reps' },
+      { name: 'Sentadilla frontal c/barra', detail: '4 series × 10–12 reps · 20 kg' },
+      { name: 'Step-up a silla baja c/mancuernas', detail: '3 series × 10 reps por pierna · subir controlado' },
+      { name: 'Puente de glúteo c/barra', detail: '3 series × 12–15 reps · pausa arriba' },
 
-      { name: 'Press de banca plano c/barra', detail: '4 series × 8–10 reps' },
-      { name: 'Press inclinado c/barra', detail: '3 series × 10 reps' },
-      { name: 'Press de pecho en máquina', detail: '3 series × 10–12 reps' },
+      { name: 'Press de pecho en el piso c/barra', detail: '4 series × 8–12 reps' },
+      { name: 'Flexiones de brazos', detail: '3 series × 8–15 reps · rodillas si hace falta' },
+      { name: 'Aperturas en piso c/mancuernas', detail: '3 series × 12–15 reps · controladas' },
     ]
   },
   {
     day: 'Miércoles', focus: 'Espalda + Hombros',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', 'Activación escapular en colchoneta'],
     zm: { timing: '3 series · 40" act / 20" pausa', items: ['Side plank', 'Plank leg raise'] },
     ex: [
-      { name: 'Jalón al pecho prono', detail: '4 series × 8–10 reps' },
-      { name: 'Remo en polea baja', detail: '3 series × 10–12 reps' },
-      { name: 'Remo unilateral c/mancuerna', detail: '3 series × 10 reps' },
+      { name: 'Remo inclinado c/barra', detail: '4 series × 10–12 reps · espalda firme' },
+      { name: 'Remo unilateral c/mancuerna', detail: '3 series × 12 reps por lado' },
+      { name: 'Pullover en piso c/mancuerna', detail: '3 series × 12–15 reps' },
 
-      { name: 'Press de hombros c/mancuerna', detail: '3 series × 8–10 reps' },
+      { name: 'Press militar c/barra', detail: '3 series × 8–10 reps' },
       { name: 'Vuelos laterales c/mancuerna', detail: '3 series × 12–15 reps' },
 
-      { name: 'Face pull en polea', detail: '3 series × 12–15 reps' },
+      { name: 'Pájaros c/mancuerna', detail: '3 series × 12–15 reps · torso inclinado' },
       ]
   },
   {
     day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', 'Bisagra de cadera sin peso + movilidad de muñecas'],
     zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
     ex: [
-      { name: 'Peso muerto c/barra', detail: '4 series × 8–10 reps' },
-      { name: 'Elevación de cadera en máquina', detail: '3 series × 10–12 reps' },
-      { name: 'Camilla de isquios', detail: '3 series × 12–15 reps' },
+      { name: 'Peso muerto rumano c/barra', detail: '4 series × 10–12 reps · 20 kg' },
+      { name: 'Buenos días c/barra', detail: '3 series × 12 reps · liviano y controlado' },
+      { name: 'Curl femoral deslizante en colchoneta', detail: '3 series × 8–12 reps · con medias/toalla' },
 
       { name: 'Curl de bíceps c/barra', detail: '3 series × 10–12 reps' },
       { name: 'Curl martillo c/mancuerna', detail: '3 series × 10–12 reps' },
-      { name: 'Press copa c/mancuerna (tríceps)', detail: '3 series × 10–12 reps' },
+      { name: 'Extensión de tríceps acostado c/barra', detail: '3 series × 10–12 reps' },
     ]
   }
 ],
@@ -335,53 +353,156 @@ const DATA = {
 B: [
   {
     day: 'Lunes', focus: 'Piernas (quad/glúteo) + Pecho',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', '2 rondas suaves: sentadilla libre + plancha alta'],
     zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Climbers'] },
     ex: [
-      { name: 'Sentadilla búlgara c/mancuerna', detail: '3 series × 10 reps' },
-      { name: 'Sentadilla sumo en multipower', detail: '3 series × 10–12 reps' },
-      { name: 'Sillón de cuádriceps', detail: '3 series × 12 reps' },
+      { name: 'Sentadilla goblet c/kettlebell', detail: '3 series × 15–20 reps · tempo lento' },
+      { name: 'Sentadilla búlgara c/mancuernas', detail: '3 series × 8–10 reps por pierna' },
+      { name: 'Sentadilla tempo c/barra', detail: '3 series × 10–12 reps · 3 seg bajando' },
 
-      { name: 'Press de pecho en máquina', detail: '4 series × 8–10 reps' },
-      { name: 'Apertura c/mancuerna', detail: '3 series × 12–15 reps' },
+      { name: 'Press cerrado en piso c/barra', detail: '4 series × 8–12 reps' },
+      { name: 'Flexiones con pausa abajo', detail: '3 series × 6–12 reps' },
 
-      { name: 'Aducción en máquina', detail: '3 series × 12–15 reps' },
+      { name: 'Squeeze press c/mancuernas en piso', detail: '3 series × 12–15 reps' },
     ]
   },
   {
     day: 'Miércoles', focus: 'Espalda + Hombros',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', 'Círculos de hombros + bisagra sin peso'],
     zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups', 'Side plank'] },
     ex: [
-      { name: 'Jalón supino', detail: '4 series × 8–10 reps' },
-      { name: 'Remo abierto en polea baja', detail: '3 series × 10–12 reps' },
-      { name: 'Pull-over en polea', detail: '3 series × 10–12 reps' },
+      { name: 'Remo supino c/barra', detail: '4 series × 10–12 reps' },
+      { name: 'Remo renegado c/mancuernas', detail: '3 series × 8–10 reps por lado' },
+      { name: 'Pullover c/kettlebell en colchoneta', detail: '3 series × 12–15 reps' },
 
-      { name: 'Press de hombros en máquina', detail: '3 series × 8–10 reps' },
-      { name: 'Vuelos posteriores c/mancuerna', detail: '3 series × 12–15 reps' },
+      { name: 'Push press c/barra', detail: '3 series × 8–10 reps · impulso suave' },
+      { name: 'Elevación frontal c/mancuernas', detail: '3 series × 12–15 reps' },
+      { name: 'Y-T-W en colchoneta', detail: '3 series × 8 reps por posición' },
     ]
   },
   {
     day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
-    calor: ['Movilidad articular general'],
+    calor: ['Movilidad articular general', 'Puentes sin peso + extensión de cadera'],
     zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
     ex: [
-      { name: 'Elevación de cadera en máquina', detail: '4 series × 10–12 reps' },
-      { name: 'Curl femoral', detail: '3 series × 12–15 reps' },
-      { name: 'Abducción en máquina', detail: '3 series × 12–15 reps' },
+      { name: 'Hip thrust c/barra en el piso', detail: '4 series × 12–15 reps' },
+      { name: 'Peso muerto unilateral c/mancuerna', detail: '3 series × 10 reps por pierna' },
+      { name: 'Swing c/kettlebell', detail: '3 series × 15–20 reps · bisagra, no sentadilla' },
 
       { name: 'Curl de bíceps martillo c/mancuerna', detail: '3 series × 10–12 reps' },
       { name: 'Curl de bíceps c/mancuerna', detail: '3 series × 10–12 reps' },
-      { name: 'Extensión de tríceps en polea', detail: '3 series × 10–12 reps' },
+      { name: 'Fondos de tríceps en silla', detail: '3 series × 8–12 reps' },
     ]
   }
 ]
+},
+reina: {
+  label: 'La Reina',
+  A: [
+  {
+    day: 'Lunes', focus: 'Piernas/Glúteo + Pecho',
+    calor: ['Movilidad articular general', '2 rondas suaves: puente de glúteo + sentadilla libre'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Dead bug', 'Russian twist'] },
+    ex: [
+      { name: 'Sentadilla goblet c/mancuerna', detail: '4 series × 12–15 reps · 5 kg' },
+      { name: 'Puente de glúteo c/barra', detail: '3 series × 12–15 reps · pausa arriba' },
+      { name: 'Abducción lateral acostada', detail: '3 series × 15 reps por lado' },
+
+      { name: 'Press de pecho en piso c/mancuernas', detail: '4 series × 10–12 reps' },
+      { name: 'Flexiones inclinadas', detail: '3 series × 8–12 reps · manos en silla/mesa firme' },
+      { name: 'Aperturas en piso c/mancuernas', detail: '3 series × 12–15 reps' },
+    ]
+  },
+  {
+    day: 'Miércoles', focus: 'Espalda + Hombros',
+    calor: ['Movilidad articular general', 'Activación escapular + círculos de hombros'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Side plank', 'Bird dog'] },
+    ex: [
+      { name: 'Remo unilateral c/mancuerna', detail: '4 series × 12 reps por lado' },
+      { name: 'Remo inclinado c/barra', detail: '3 series × 10–12 reps · 20 kg si sale prolijo' },
+      { name: 'Pullover c/kettlebell en colchoneta', detail: '3 series × 12–15 reps' },
+
+      { name: 'Press de hombros c/mancuernas', detail: '3 series × 10–12 reps' },
+      { name: 'Vuelos laterales c/mancuernas', detail: '3 series × 12–15 reps' },
+      { name: 'Pájaros c/mancuernas', detail: '3 series × 12–15 reps' },
+      ]
+  },
+  {
+    day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+    calor: ['Movilidad articular general', 'Bisagra sin peso + puente de glúteo'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+    ex: [
+      { name: 'Peso muerto rumano c/mancuernas', detail: '4 series × 12–15 reps' },
+      { name: 'Hip thrust c/barra en el piso', detail: '3 series × 12–15 reps' },
+      { name: 'Curl femoral deslizante en colchoneta', detail: '3 series × 8–12 reps · rango cómodo' },
+
+      { name: 'Curl de bíceps c/mancuernas', detail: '3 series × 10–12 reps' },
+      { name: 'Curl martillo c/mancuernas', detail: '3 series × 10–12 reps' },
+      { name: 'Extensión de tríceps sobre cabeza c/mancuerna', detail: '3 series × 10–12 reps' },
+    ]
+  }
+],
+
+B: [
+  {
+    day: 'Lunes', focus: 'Piernas/Glúteo + Pecho',
+    calor: ['Movilidad articular general', '2 rondas suaves: sentadilla + plancha alta'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['V-ups modificados', 'Climbers lentos'] },
+    ex: [
+      { name: 'Sentadilla sumo c/barra', detail: '3 series × 12–15 reps · 20 kg o menos' },
+      { name: 'Sentadilla búlgara sin peso o c/mancuernas', detail: '3 series × 8–10 reps por pierna' },
+      { name: 'Abducción lateral acostada', detail: '3 series × 15 reps por lado' },
+
+      { name: 'Press cerrado en piso c/mancuernas', detail: '4 series × 10–12 reps' },
+      { name: 'Flexiones con rodillas apoyadas', detail: '3 series × 8–12 reps' },
+
+      { name: 'Squeeze press c/mancuernas en piso', detail: '3 series × 12–15 reps' },
+    ]
+  },
+  {
+    day: 'Miércoles', focus: 'Espalda + Hombros',
+    calor: ['Movilidad articular general', 'Movilidad torácica + bisagra sin peso'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Dead bug', 'Side plank'] },
+    ex: [
+      { name: 'Remo c/barra agarre supino', detail: '4 series × 10–12 reps' },
+      { name: 'Remo apoyado c/mancuernas', detail: '3 series × 12 reps' },
+      { name: 'Superman en colchoneta', detail: '3 series × 12–15 reps' },
+
+      { name: 'Press Arnold c/mancuernas', detail: '3 series × 10–12 reps' },
+      { name: 'Elevación frontal c/kettlebell', detail: '3 series × 12–15 reps' },
+      { name: 'Y-T-W en colchoneta', detail: '3 series × 8 reps por posición' },
+    ]
+  },
+  {
+    day: 'Viernes', focus: 'Isquios/Glúteo + Bíceps/Tríceps',
+    calor: ['Movilidad articular general', 'Puente sin peso + patada de glúteo'],
+    zm: { timing: '3 series · 30" act / 15" pausa', items: ['Sit-up', 'Bicycle crunches'] },
+    ex: [
+      { name: 'Peso muerto rumano c/barra', detail: '4 series × 10–12 reps · controlado' },
+      { name: 'Puente unilateral en colchoneta', detail: '3 series × 10 reps por pierna' },
+      { name: 'Swing c/kettlebell', detail: '3 series × 15 reps · técnica primero' },
+
+      { name: 'Curl concentrado c/mancuerna', detail: '3 series × 10–12 reps por lado' },
+      { name: 'Curl de bíceps c/barra', detail: '3 series × 10–12 reps' },
+      { name: 'Fondos de tríceps en silla', detail: '3 series × 8–12 reps' },
+    ]
+  }
+]
+}
 };
-let week = 'A', dayIdx = 0;
+let person = 'ronald', week = 'A', dayIdx = 0;
 let done = {};
 let timerInterval = null, timerTotal = 90, timerLeft = 90;
 
-function key() { return `${week}-${dayIdx}`; }
+function key() { return `${person}-${week}-${dayIdx}`; }
+
+function setPerson(p, btn) {
+  person = p;
+  document.querySelectorAll('.person-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('content').scrollTop = 0;
+  render();
+}
 
 function setWeek(w, btn) {
   week = w;
@@ -404,7 +525,7 @@ function toggleEx(idx) {
   done[k][idx] = !done[k][idx];
   saveState();
   render();
-  const d = DATA[week][dayIdx];
+  const d = DATA[person][week][dayIdx];
   const total = d.ex.length;
   const count = Object.values(done[k]||{}).filter(Boolean).length;
   if (count === total) {
@@ -420,7 +541,7 @@ function resetDay() {
 }
 
 function render() {
-  const d = DATA[week][dayIdx];
+  const d = DATA[person][week][dayIdx];
   const k = key();
   const doneMap = done[k] || {};
   const total = d.ex.length;
@@ -435,7 +556,7 @@ function render() {
 
   // Calor
   html += `<div class="section">
-    <div class="section-label">Entrada en calor — 5 min</div>
+    <div class="section-label">Entrada en calor — casa · ${DATA[person].label}</div>
     <div class="calor-items">`;
   d.calor.forEach(c => { html += `<div class="calor-item">· ${c}</div>`; });
   html += `</div></div>`;
