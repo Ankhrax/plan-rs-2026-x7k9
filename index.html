@@ -262,7 +262,7 @@ nav {
 
 <button id="reset-btn" onclick="resetDay()">↺ Reiniciar</button>
 
-<nav><span class="nav-hint">Lunes a viernes · Fuerza y recuperación · Sin dolor</span></nav>
+<nav><span class="nav-hint">4 días de fuerza · Jueves bici · Finde libre</span></nav>
 
 <div id="timer-overlay">
   <div class="timer-label" id="timer-label">Pausa entre series</div>
@@ -294,10 +294,10 @@ const DATA = [
       "2 series de aproximación de press, movilidad de hombros sin dolor"
     ],
     "zm": {
-      "timing": "2 series · controladas",
+      "timing": "5 minutos · al terminar",
       "items": [
-        "Dead bug · 8 por lado",
-        "Plancha · 20–30 seg"
+        "Dead bug · 2 × 8 por lado",
+        "Plancha · 2 × 20–30 seg"
       ]
     },
     "ex": [
@@ -331,11 +331,8 @@ const DATA = [
       "Bisagra sin carga + 2 series progresivas de peso muerto"
     ],
     "zm": {
-      "timing": "2 series · controladas",
-      "items": [
-        "Bird dog · 8 por lado",
-        "Pallof press · 10 por lado"
-      ]
+      "timing": "",
+      "items": []
     },
     "ex": [
       {
@@ -353,10 +350,6 @@ const DATA = [
       {
         "name": "Prensa de piernas, recorrido cómodo",
         "detail": "3 × 8–10 · ligera/moderada, sin flexión profunda ni dolor"
-      },
-      {
-        "name": "Elevación de gemelos",
-        "detail": "3 × 10–15 · recorrido cómodo"
       }
     ]
   },
@@ -368,11 +361,8 @@ const DATA = [
       "Activación escapular + series progresivas de remo"
     ],
     "zm": {
-      "timing": "2 series · controladas",
-      "items": [
-        "Plancha lateral · 20–30 seg por lado",
-        "Dead bug · 8 por lado"
-      ]
+      "timing": "",
+      "items": []
     },
     "ex": [
       {
@@ -382,10 +372,6 @@ const DATA = [
       {
         "name": "Remo con pecho apoyado",
         "detail": "4 × 6–8 · descanso 2–3 min"
-      },
-      {
-        "name": "Remo unilateral en polea",
-        "detail": "3 × 8–10 por lado"
       },
       {
         "name": "Face pull",
@@ -399,29 +385,23 @@ const DATA = [
   },
   {
     "day": "Jueves",
-    "focus": "Recuperación activa",
+    "focus": "Bicicleta al aire libre · recuperación activa",
     "calor": [
-      "Día suave: recuperar para volver a entrenar fuerte",
-      "Si hay dolor/inflamación de rodilla, reducir actividad y evaluar"
+      "Elegí un recorrido plano y empezá a ritmo tranquilo",
+      "Rodilla: cambios livianos, pedaleo fluido; evitá subidas exigentes y dolor"
     ],
     "zm": {
-      "timing": "Sin exigencia",
-      "items": [
-        "Respiración y movilidad suave · 5 min"
-      ]
+      "timing": "",
+      "items": []
     },
     "ex": [
       {
-        "name": "Bicicleta estática o caminata cómoda",
-        "detail": "20–30 min · ritmo de conversación · sin dolor"
+        "name": "Salir en bicicleta",
+        "detail": "20–40 min · ritmo cómodo, que puedas conversar · sin competir"
       },
       {
-        "name": "Movilidad suave de cadera y tobillos",
-        "detail": "8–10 min · no forzar flexión de rodilla"
-      },
-      {
-        "name": "Isométrico de cuádriceps tolerable",
-        "detail": "3 × 20–30 seg · solo si resulta cómodo; parar si aumenta dolor"
+        "name": "Movilidad suave (opcional)",
+        "detail": "5 min · sin forzar la rodilla · si llueve o hay molestias, descansá"
       }
     ]
   },
@@ -433,10 +413,10 @@ const DATA = [
       "Series livianas de press y remo"
     ],
     "zm": {
-      "timing": "2 series · controladas",
+      "timing": "5 minutos · al terminar",
       "items": [
-        "Pallof press · 10 por lado",
-        "Plancha · 20–30 seg"
+        "Pallof press · 2 × 10 por lado",
+        "Plancha · 2 × 20–30 seg"
       ]
     },
     "ex": [
@@ -455,14 +435,6 @@ const DATA = [
       {
         "name": "Elevaciones laterales con mancuernas",
         "detail": "3 × 12–15"
-      },
-      {
-        "name": "Curl martillo",
-        "detail": "2 × 10–12"
-      },
-      {
-        "name": "Tríceps en cuerda",
-        "detail": "2 × 10–12"
       }
     ]
   }
@@ -471,7 +443,7 @@ let dayIdx = 0;
 let done = {};
 let timerInterval = null, timerTotal = 150, timerLeft = 150;
 
-function key() { return `strength-v2-${dayIdx}`; }
+function key() { return `strength-v3-${dayIdx}`; }
 
 function setDay(i, btn) {
   dayIdx = i;
@@ -514,7 +486,7 @@ function render() {
   document.getElementById('prog-pct').textContent = pct + '%';
   document.getElementById('prog-label').textContent = `${count} / ${total} ejercicios`;
 
-  let html = `<div class="section"><div class="section-label">${d.day} · ${d.focus}</div><div style="font-size:12px;color:var(--muted);line-height:1.6">Fuerza: elegí una carga con 1–3 repeticiones en reserva. Nunca fuerces la rodilla. Si aumenta el dolor durante o al día siguiente, bajá carga/rango o suspendé ese ejercicio. Descansá 2–3 min en básicos y 60–90 seg en accesorios.</div></div>`;
+  let html = `<div class="section"><div class="section-label">${d.day} · ${d.focus}</div><div style="font-size:12px;color:var(--muted);line-height:1.6">4 días de fuerza de 45–60 min, jueves de bici suave. En pesas, dejá 1–3 repeticiones en reserva y descansá 2–3 min en ejercicios principales. Si la rodilla duele o se inflama, reducí o suspendé la actividad.</div></div>`;
 
   // Calor
   html += `<div class="section">
@@ -524,7 +496,7 @@ function render() {
   html += `</div></div>`;
 
   // Zona media
-  html += `<div class="section">
+  if (d.zm.items.length) html += `<div class="section">
     <div class="zm-header">
       <div class="section-label" style="margin-bottom:0">Zona media</div>
       <div class="zm-timing">${d.zm.timing}</div>
