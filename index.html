@@ -240,7 +240,7 @@ nav {
       <div class="app-title">GYM PLAN</div>
       <div class="plan-controls"><span style="font-size:12px;color:var(--muted)">SEMANA ÚNICA · FUERZA</span></div>
     </div>
-    <div class="day-tabs"><button class="day-tab active" onclick="setDay(0,this)">LUN</button><button class="day-tab" onclick="setDay(1,this)">MAR</button><button class="day-tab" onclick="setDay(2,this)">MIÉ</button><button class="day-tab" onclick="setDay(3,this)">JUE</button><button class="day-tab" onclick="setDay(4,this)">VIE</button><button class="day-tab" onclick="setDay(5,this)">SÁB</button><button class="day-tab" onclick="setDay(6,this)">DOM</button></div>
+    <div class="day-tabs"><button class="day-tab active" onclick="setDay(0,this)">LUN</button><button class="day-tab" onclick="setDay(1,this)">MAR</button><button class="day-tab" onclick="setDay(2,this)">MIÉ</button><button class="day-tab" onclick="setDay(3,this)">JUE</button><button class="day-tab" onclick="setDay(4,this)">VIE</button></div>
   </header>
 
   <div id="install-hint">
@@ -262,7 +262,7 @@ nav {
 
 <button id="reset-btn" onclick="resetDay()">↺ Reiniciar</button>
 
-<nav><span class="nav-hint">5 días de fuerza + 2 de recuperación · No entrenar con dolor</span></nav>
+<nav><span class="nav-hint">Lunes a viernes · Fuerza y recuperación · Sin dolor</span></nav>
 
 <div id="timer-overlay">
   <div class="timer-label" id="timer-label">Pausa entre series</div>
@@ -463,67 +463,6 @@ const DATA = [
       {
         "name": "Tríceps en cuerda",
         "detail": "2 × 10–12"
-      }
-    ]
-  },
-  {
-    "day": "Sábado",
-    "focus": "Pierna B · fuerza tolerable",
-    "calor": [
-      "8–10 min bici suave",
-      "2 series ligeras de aproximación en prensa"
-    ],
-    "zm": {
-      "timing": "2 series · controladas",
-      "items": [
-        "Bird dog · 8 por lado",
-        "Plancha lateral · 20 seg por lado"
-      ]
-    },
-    "ex": [
-      {
-        "name": "Prensa de piernas, recorrido sin dolor",
-        "detail": "4 × 6–8 · controlada · sin bajar profundo"
-      },
-      {
-        "name": "Sentadilla a cajón alto (opcional)",
-        "detail": "3 × 6–8 · solo si rodilla cómoda; sustituir por glúteos si duele"
-      },
-      {
-        "name": "Hip thrust en máquina",
-        "detail": "3 × 8–10"
-      },
-      {
-        "name": "Curl femoral",
-        "detail": "3 × 8–12"
-      },
-      {
-        "name": "Elevación de gemelos sentado",
-        "detail": "3 × 10–15"
-      }
-    ]
-  },
-  {
-    "day": "Domingo",
-    "focus": "Recuperación / descanso",
-    "calor": [
-      "Descanso real también cuenta como cumplir el plan",
-      "Si estás fatigado, podés descansar totalmente"
-    ],
-    "zm": {
-      "timing": "Opcional",
-      "items": [
-        "Movilidad ligera · 5–10 min"
-      ]
-    },
-    "ex": [
-      {
-        "name": "Caminata suave o bicicleta opcional",
-        "detail": "15–25 min · intensidad baja"
-      },
-      {
-        "name": "Movilidad relajada",
-        "detail": "5–10 min · sin dolor ni rebotes"
       }
     ]
   }
